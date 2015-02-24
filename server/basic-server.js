@@ -38,13 +38,13 @@ var dataParser = function(order, where, limit){
  */
 app.get('/classes/messages', function(req, res) {
   var order = req.query.order;
-  console.log("Created: ", order);
+  //console.log("Created: ", order);
   var where = req.query.where;
   //console.log("Where: ", where);
   var limit = req.query.limit;
-  console.log("Limit: ", limit);
+  //console.log("Limit: ", limit);
   var newDataArr = {results: dataParser(order, where, limit)};
-  console.log(newDataArr);
+  //console.log(newDataArr);
   res.end(JSON.stringify(newDataArr));
 });
 
@@ -62,13 +62,14 @@ app.post('/classes/messages', function(req, res) {
     var newData = JSON.parse(data);
     newData.createdAt = new Date();
     dataArr.results.push(newData);
-    console.log(dataArr.results);
+    //console.log(dataArr.results);
     //var responseObj = {"success" : "Updated Successfully", "status" : 200};
     //response.writeHead(statusCode, headers);
     //response.end(JSON.stringify(responseObj));
     //response.end();
     res.status(200);
-    res.end();
+    res.writeHead(200);
+    res.end(JSON.stringify({ObjectID: 1}));
   });
 });
 

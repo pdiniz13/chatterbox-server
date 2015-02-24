@@ -125,22 +125,17 @@ $(document).on('ready', function () {
       dataType: 'json',
       contentType: 'application/json',
       success: function () {
-        console.log('inside');
         newUpdate();
       },
       error: function () {
-        newUpdate();
         console.log('data was not submitted');
-      },
-      complete: function(){
-        console.log("Yay it ended");
       }
     });
     $('#text').val("");
   });
 
   newUpdate();
-  //setInterval(newUpdate, 1000);
+  setInterval(newUpdate, 1000);
   /// END OF DOCUMENT REA
 });
 
