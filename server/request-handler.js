@@ -16,6 +16,10 @@ var dataArr = {results: [{username:'Rioa', text: 'hello', roomname: 'lobby', cre
   {username:'Rioa', text: 'hello', roomname: 'lobby', createdAt: 'Mon Feb 23 2015 16:43:01 GMT-0800'},
   {username:'Rioa', text: 'hello', roomname: 'lobby', createdAt: 'Mon Feb 23 2015 16:43:01 GMT-0800'},
 ]};
+
+//var redis = require('redis');
+//var client = redis.createClient();
+
 exports.requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -57,7 +61,9 @@ exports.requestHandler = function(request, response) {
     headers['Content-Type'] = "JSON";
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
+  if(request.method == "OPTIONS") {
+    response.writeHead(statusCode, headers);
+  }
 
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
@@ -66,14 +72,15 @@ exports.requestHandler = function(request, response) {
   if(request.method == "GET") {
     var obj = require('url').parse(request.url, true);
     //console.log(obj);
+    response.writeHead(statusCode, headers);
     response.end(JSON.stringify(dataArr));
   }
   //
   if(request.method == "POST") {
-    var obj = require('url').parse(request.url, true);
+    //var obj = require('url').parse(request.url, true);
     var data = "";
     request.on('data', function(chunk) {
-      data += chunk
+      data += chunk;
       //console.log(this);
       //console.log(chunk.toString());
     });
@@ -86,7 +93,9 @@ exports.requestHandler = function(request, response) {
       dataArr.results.push(newData);
       console.log(dataArr.results);
       var responseObj = {"success" : "Updated Successfully", "status" : 200};
+      response.writeHead(statusCode, headers);
       response.end(JSON.stringify(responseObj));
+      //response.end();
     });
   }
 
@@ -108,6 +117,7 @@ exports.requestHandler = function(request, response) {
 // Another way to get around this restriction is to serve you chat
 // client from this domain by setting up static file serving.
 var defaultCorsHeaders = {
+  "Content-Type": "application/json",
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
   "access-control-allow-headers": "content-type, accept",

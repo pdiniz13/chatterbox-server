@@ -26,7 +26,7 @@ $(document).on('ready', function () {
   var friends = {};
 
   var newUpdate = function () {
-    console.log('click');
+    //console.log('click');
     var currentRoom = $('#currentRoom').text();
     var where = '{"roomname":' + '"' + currentRoom + '"' + '}';
     var roomName = $('#currentRoom').text();
@@ -35,7 +35,7 @@ $(document).on('ready', function () {
       data: {where: where, order: '-createdAt', limit: "10"},
       dataType: 'json',
       success: function (response) {
-        console.log(response.results);
+        //console.log(response.results);
         var div = $('<div></div>');
         for(var i = 0, count = response.results.length; i < count; i++){
           var text;
@@ -95,14 +95,14 @@ $(document).on('ready', function () {
   $('body').on('submit', '.name', function (event) {
     event.preventDefault();
     $('#currentUserName').text($('#username').val());
-    $('#currentUserName').val("");
+    $('#username').val("");
   });
 
   $('body').on('submit', '.room', function (event) {
     event.preventDefault();
     $('#currentRoom').text($('#roomname').val());
     newUpdate();
-    $('#currentRoom').val("");
+    $('#roomname').val("")
   });
 
   $('body').on('click', '.refresh', function () {
@@ -125,18 +125,22 @@ $(document).on('ready', function () {
       dataType: 'json',
       contentType: 'application/json',
       success: function () {
+        console.log('inside');
         newUpdate();
       },
       error: function () {
         newUpdate();
         console.log('data was not submitted');
+      },
+      complete: function(){
+        console.log("Yay it ended");
       }
     });
     $('#text').val("");
   });
 
   newUpdate();
-  setInterval(newUpdate, 1000);
+  //setInterval(newUpdate, 1000);
   /// END OF DOCUMENT REA
 });
 
