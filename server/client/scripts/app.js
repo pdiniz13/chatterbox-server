@@ -26,7 +26,6 @@ $(document).on('ready', function () {
   var friends = {};
 
   var newUpdate = function () {
-    //console.log('click');
     var currentRoom = $('#currentRoom').text();
     var where = '{"roomname":' + '"' + currentRoom + '"' + '}';
     var roomName = $('#currentRoom').text();
@@ -35,27 +34,26 @@ $(document).on('ready', function () {
       data: {where: where, order: '-createdAt', limit: "10"},
       dataType: 'json',
       success: function (response) {
-        //console.log(response.results);
         var div = $('<div></div>');
-        for(var i = 0, count = response.results.length; i < count; i++){
+        for(var i = 0, count = response.length; i < count; i++){
           var text;
-          if (response.results[i].text !== undefined && response.results[i].text !== null) {
-            text = removeTags(response.results[i].text);
+          if (response[i].text !== undefined && response[i].text !== null) {
+            text = removeTags(response[i].text);
           }
           else{
             text = ""
           }
-          var createdAt = removeTags(response.results[i].createdAt);
+          var createdAt = removeTags(response[i].createdAt);
           var roomName;
-          if (response.results[i].roomname !== undefined && response.results[i].roomname !== null){
-            roomName = removeTags(response.results[i].roomname);
+          if (response[i].roomname !== undefined && response[i].roomname !== null){
+            roomName = removeTags(response[i].roomname);
           }
           else{
             roomName = "unknown";
           }
           var userName;
-          if (response.results[i].username !== undefined && response.results[i].username !== null){
-            userName = removeTags(response.results[i].username);
+          if (response[i].username !== undefined && response[i].username !== null){
+            userName = removeTags(response[i].username);
           }
           else{
             userName = undefined;
@@ -63,10 +61,10 @@ $(document).on('ready', function () {
 
           var content = $('<p></p>');
           if (friends[userName] === undefined){
-            content.append('Username: ' + '<div class="clickMe">' + response.results[i].username + '</div>' + '<br>');
+            content.append('Username: ' + '<div class="clickMe">' + response[i].username + '</div>' + '<br>');
           }
           else{
-            content.append('Username: ' + '<strong>' + response.results[i].username + '</strong>' + '<br>');
+            content.append('Username: ' + '<strong>' + response[i].username + '</strong>' + '<br>');
           }
           content.append('Text: ' + text + '<br>');
           content.append('Create At: ' + createdAt+ '<br>');
@@ -135,8 +133,7 @@ $(document).on('ready', function () {
   });
 
   newUpdate();
-  setInterval(newUpdate, 1000);
-  /// END OF DOCUMENT REA
+  setInterval(newUpdate, 10000);
 });
 
 
