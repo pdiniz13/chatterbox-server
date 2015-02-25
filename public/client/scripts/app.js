@@ -1,5 +1,6 @@
 $(document).on('ready', function () {
   var tagBody = '(?:[^"\'>]|"[^"]*"|\'[^\']*\')*';
+
   var tagOrComment = new RegExp(
     '<(?:'
       // Comment body.
@@ -28,7 +29,7 @@ $(document).on('ready', function () {
   var newUpdate = function() {
     var currentRoom = $('#currentRoom').text();
     var roomName = $('#currentRoom').text();
-    $.ajax('http://paulochatapp.azurewebsites.net/classes/messages', {
+    $.ajax('http://127.0.0.1:8080/classes/messages', {
       type: 'GET',
       data: {where: roomName, order: '-createdAt', limit: "10"},
       dataType: 'json',
@@ -37,6 +38,7 @@ $(document).on('ready', function () {
         for (var i = 0, count = response.length; i < count; i++) {
           var text;
           if (response[i].text !== undefined && response[i].text !== null) {
+            text = response[i].text;
           }
           else {
             text = ""
@@ -44,12 +46,14 @@ $(document).on('ready', function () {
           var createdAt = removeTags(response[i].createdAt);
           var roomName;
           if (response[i].roomname !== undefined && response[i].roomname !== null) {
+            roomName = response[i].roomname
           }
           else {
             roomName = "unknown";
           }
           var userName;
           if (response[i].username !== undefined && response[i].username !== null) {
+            username = response[i].text;
           }
           else {
             userName = undefined;
