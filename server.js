@@ -55,7 +55,7 @@ Message.sync({force:true}).then(function () {
 
 var url = require('url');
 
-app.use(express.static(__dirname+'/client'));
+app.use(express.static(__dirname+'/server/client'));
 
 
 /**
