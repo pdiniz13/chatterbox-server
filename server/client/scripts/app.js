@@ -27,11 +27,10 @@ $(document).on('ready', function () {
 
   var newUpdate = function () {
     var currentRoom = $('#currentRoom').text();
-    var where = '{"roomname":' + '"' + currentRoom + '"' + '}';
     var roomName = $('#currentRoom').text();
     $.ajax('http://127.0.0.1:3000/classes/messages', {
       type: 'GET',
-      data: {where: where, order: '-createdAt', limit: "10"},
+      data: {where: roomName, order: '-createdAt', limit: "10"},
       dataType: 'json',
       success: function (response) {
         var div = $('<div></div>');

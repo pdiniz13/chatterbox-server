@@ -6,7 +6,7 @@ body {
 }
 
 .wrapper {
-    width: 800px;
+    width: 900px;
     margin: auto;
     text-align: left;
     background: white;
@@ -62,7 +62,7 @@ form input[type=text] {
 
 .sideBar {
     float:left;
-    width:100px;
+    width:130px;
     display:inline;
     padding: 50px 20px;
     border: solid #ddd;

@@ -14,8 +14,6 @@ var sequelize = new Sequelize('database', 'username', 'password', {
   storage: 'database.sqlite'
 });
 
-Sequelize.init;
-
 var Message = sequelize.define('message', {
   text: {
     type: Sequelize.STRING
@@ -47,7 +45,12 @@ app.use(express.static(__dirname+'/client'));
  * Get request from client for initial data.
  */
 app.get('/classes/messages', function(req, res){
-  Message.findAll({limit: 10, order: 'createdAt DESC'}).then(function(messages) {
+  var order = req.query.order;
+  console.log("Created: ", order);
+  var where = req.query.where || "lobby";
+  console.log("Where: ", where);
+  var limit = req.query.limit || 100;
+  Message.findAll({limit: limit, order: 'createdAt DESC', where: {roomname: where}}).then(function(messages) {
     res.end(JSON.stringify(messages));
   });
 });
