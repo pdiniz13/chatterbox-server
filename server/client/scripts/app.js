@@ -13,6 +13,7 @@ $(document).on('ready', function () {
     + tagBody
     + ')>',
     'gi');
+
   function removeTags(html) {
     var oldHtml;
     do {
@@ -25,88 +26,126 @@ $(document).on('ready', function () {
 
   var friends = {};
 
-  var newUpdate = function () {
+  var newUpdate = function() {
     var currentRoom = $('#currentRoom').text();
     var roomName = $('#currentRoom').text();
     $.ajax('http://127.0.0.1:3000/classes/messages', {
       type: 'GET',
       data: {where: roomName, order: '-createdAt', limit: "10"},
       dataType: 'json',
-      success: function (response) {
+      success: function(response) {
         var div = $('<div></div>');
-        for(var i = 0, count = response.length; i < count; i++){
+        for (var i = 0, count = response.length; i < count; i++) {
           var text;
           if (response[i].text !== undefined && response[i].text !== null) {
-            text = removeTags(response[i].text);
           }
-          else{
+          else {
             text = ""
           }
           var createdAt = removeTags(response[i].createdAt);
           var roomName;
-          if (response[i].roomname !== undefined && response[i].roomname !== null){
-            roomName = removeTags(response[i].roomname);
+          if (response[i].roomname !== undefined && response[i].roomname !== null) {
           }
-          else{
+          else {
             roomName = "unknown";
           }
           var userName;
-          if (response[i].username !== undefined && response[i].username !== null){
-            userName = removeTags(response[i].username);
+          if (response[i].username !== undefined && response[i].username !== null) {
           }
-          else{
+          else {
             userName = undefined;
           }
 
           var content = $('<p></p>');
-          if (friends[userName] === undefined){
+          if (friends[userName] === undefined) {
             content.append('Username: ' + '<div class="clickMe">' + response[i].username + '</div>' + '<br>');
           }
-          else{
+          else {
             content.append('Username: ' + '<strong>' + response[i].username + '</strong>' + '<br>');
           }
           content.append('Text: ' + text + '<br>');
-          content.append('Create At: ' + createdAt+ '<br>');
+          content.append('Create At: ' + createdAt + '<br>');
           content.append('Room Name: ' + roomName + '<br>');
           div.append(content);
         }
         $('.content').html(div);
       },
       contentType: 'application/json',
-      error: function (errorMessage, errorType, error) {
+      error: function(errorMessage, errorType, error) {
+      }
+    });
+  };
+  var updateFriends = function(){
+    $.ajax('http://127.0.0.1:3000/classes/friends', {
+      type: 'GET',
+      data: {username: $('#currentUserName').text()},
+      dataType: 'json',
+      contentType: 'application/json',
+      success: function(response) {
+
+        var content = $('<ul></ul>');
+        for (var i = 0, count = response.length; i < count; i++) {
+          if(friends[response[i].friend] === undefined) {
+            friends[response[i].friend] = true;
+            content.append("<li>"+response[i].friend+"</li>");
+          }
+        }
+        $('#friends').html(content);
+      },
+      error: function(errorMessage, errorType, error) {
       }
     });
   };
 
-  $('body').on('click', '.clickMe', function(event){
-    event.preventDefault();
-    if (friends[$(this).text()] === undefined){
-      console.log($(this).text());
-      friends[$(this).text()] = $(this).text();
-      $('#friends').append("<li>" + $(this).text() + "</li>");
-      newUpdate();
-    }
 
+  $('body').on('click', '.clickMe', function(event) {
+    event.preventDefault();
+    var friend = $(this).text();
+    if(friends[friend] === undefined) {
+      friends[friend] = true;
+      var obj = {
+        "username": $('#currentUserName').text(),
+        "friend": friend
+      };
+
+      var JSONobj = JSON.stringify(obj);
+
+      $.ajax('http://127.0.0.1:3000/classes/friends', {
+        type: 'POST',
+        data: JSONobj,
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function() {
+          friends = {};
+          updateFriends();
+        },
+        error: function() {
+          console.log('data was not submitted');
+        }
+      });
+    }
   });
 
-  $('body').on('submit', '.name', function (event) {
+  $('body').on('submit', '.name', function(event) {
     event.preventDefault();
+    friends = {};
     $('#currentUserName').text($('#username').val());
+    updateFriends();
     $('#username').val("");
   });
 
-  $('body').on('submit', '.room', function (event) {
+  $('body').on('submit', '.room', function(event) {
     event.preventDefault();
     $('#currentRoom').text($('#roomname').val());
     newUpdate();
     $('#roomname').val("")
   });
 
-  $('body').on('click', '.refresh', function () {
+  $('body').on('click', '.refresh', function() {
     newUpdate();
   });
 
-  $('body').on('submit', '.message', function (event){
+  $('body').on('submit', '.message', function(event) {
     event.preventDefault();
     var obj = {
       "username": $('#currentUserName').text(),
@@ -121,17 +160,17 @@ $(document).on('ready', function () {
       data: JSONobj,
       dataType: 'json',
       contentType: 'application/json',
-      success: function () {
+      success: function() {
         newUpdate();
       },
-      error: function () {
+      error: function() {
         console.log('data was not submitted');
       }
     });
     $('#text').val("");
   });
-
   newUpdate();
+  updateFriends();
   setInterval(newUpdate, 10000);
 });
 

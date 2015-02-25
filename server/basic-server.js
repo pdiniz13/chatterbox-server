@@ -27,11 +27,20 @@ var Message = sequelize.define('message', {
 
 });
 
-//Message.sync().then(function () {
-//   return Message.create({
-//     username:'Rioa',
-//     text: 'hello',
-//     roomname: 'lobby'
+var Friends = sequelize.define('friends', {
+  username: {
+    type: Sequelize.STRING
+  },
+  friend: {
+    type: Sequelize.STRING
+  }
+
+});
+
+//Friends.sync({force:true}).then(function () {
+//   return Friends.create({
+//     username:'Pdiniz',
+//     friend: 'Rioa'
 //   });
 //});
 
@@ -55,6 +64,13 @@ app.get('/classes/messages', function(req, res){
   });
 });
 
+app.get('/classes/friends', function(req, res){
+  var username = req.query.username;
+  Friends.findAll({where: {username: username}}).then(function(friends) {
+    res.end(JSON.stringify(friends));
+  });
+});
+
 
 
 app.post('/classes/messages', function(req, res) {
@@ -73,6 +89,29 @@ app.post('/classes/messages', function(req, res) {
         text: newData.text,
         roomname: newData.roomname
        });
+    });
+    res.status(200);
+    res.writeHead(200);
+    res.end(JSON.stringify({ObjectID: 1}));
+  });
+});
+
+
+
+
+app.post('/classes/friends', function(req, res) {
+  var data = "";
+  req.on('data', function(chunk) {
+    data += chunk;
+  });
+
+  req.on('end', function() {
+    var newData = JSON.parse(data);
+    Friends.sync().then(function () {
+      return Friends.create({
+        username: newData.username,
+        friend: newData.friend
+      });
     });
     res.status(200);
     res.writeHead(200);
