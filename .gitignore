@@ -33,7 +33,7 @@ node_modules
 
 
 ### Bower ###
-server/client/bower_components/
+public/client/bower_components/
 
 
 ### PhPStorm ###

@@ -32,7 +32,7 @@ exports.requestHandler = function(request, response) {
 
   // Do some basic logging.
   //
-  // Adding more logging to your server can be an easy way to get passive
+  // Adding more logging to your public can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   //message object
@@ -108,7 +108,7 @@ exports.requestHandler = function(request, response) {
 
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
-// This code allows this server to talk to websites that
+// This code allows this public to talk to websites that
 // are on different domains, for instance, your chat client.
 //
 // Your chat client is running from a url like file://your/chat/client/index.html,
