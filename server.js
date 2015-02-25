@@ -126,5 +126,4 @@ app.post('/classes/friends', function(req, res) {
     res.end(JSON.stringify({ObjectID: 1}));
   });
 });
-
 app.listen(process.env.port || 8080);
