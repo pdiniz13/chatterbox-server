@@ -127,4 +127,4 @@ app.post('/classes/friends', function(req, res) {
   });
 });
 
-app.listen(1337);
+app.listen(process.env.port || 8080);

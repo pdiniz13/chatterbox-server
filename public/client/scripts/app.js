@@ -29,7 +29,7 @@ $(document).on('ready', function () {
   var newUpdate = function() {
     var currentRoom = $('#currentRoom').text();
     var roomName = $('#currentRoom').text();
-    $.ajax('http://127.0.0.1:1337/classes/messages', {
+    $.ajax('http://127.0.0.1:8080/classes/messages', {
       type: 'GET',
       data: {where: roomName, order: '-createdAt', limit: "10"},
       dataType: 'json',
@@ -76,7 +76,7 @@ $(document).on('ready', function () {
     });
   };
   var updateFriends = function(){
-    $.ajax('http://127.0.0.1:1337/classes/friends', {
+    $.ajax('http://127.0.0.1:8080/classes/friends', {
       type: 'GET',
       data: {username: $('#currentUserName').text()},
       dataType: 'json',
@@ -110,7 +110,7 @@ $(document).on('ready', function () {
 
       var JSONobj = JSON.stringify(obj);
 
-      $.ajax('http://127.0.0.1:1337/classes/friends', {
+      $.ajax('http://127.0.0.1:8080/classes/friends', {
         type: 'POST',
         data: JSONobj,
         dataType: 'json',
@@ -155,7 +155,7 @@ $(document).on('ready', function () {
 
     var JSONobj = JSON.stringify(obj);
 
-    $.ajax('http://127.0.0.1:1337/classes/messages', {
+    $.ajax('http://127.0.0.1:8080/classes/messages', {
       type: 'POST',
       data: JSONobj,
       dataType: 'json',
