@@ -37,12 +37,20 @@ var Friends = sequelize.define('friends', {
 
 });
 
-//Friends.sync({force:true}).then(function () {
-//   return Friends.create({
-//     username:'Pdiniz',
-//     friend: 'Rioa'
-//   });
-//});
+Friends.sync({force:true}).then(function () {
+   return Friends.create({
+     username:'Pdiniz',
+     friend: 'Rioa'
+   });
+});
+
+Message.sync({force:true}).then(function () {
+  return Message.create({
+    username:'Pdiniz',
+    text: 'Hello',
+    roomname: 'lobby'
+  });
+});
 
 
 var url = require('url');
@@ -119,4 +127,4 @@ app.post('/classes/friends', function(req, res) {
   });
 });
 
-app.listen(3000);
+app.listen(80);
