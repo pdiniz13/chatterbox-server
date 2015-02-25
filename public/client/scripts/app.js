@@ -28,7 +28,7 @@ $(document).on('ready', function () {
   var newUpdate = function() {
     var currentRoom = $('#currentRoom').text();
     var roomName = $('#currentRoom').text();
-    $.ajax('http://127.0.0.1:80/classes/messages', {
+    $.ajax('http://paulochatapp.azurewebsites.net/classes/messages', {
       type: 'GET',
       data: {where: roomName, order: '-createdAt', limit: "10"},
       dataType: 'json',
@@ -75,7 +75,7 @@ $(document).on('ready', function () {
     });
   };
   var updateFriends = function(){
-    $.ajax('http://127.0.0.1:80/classes/friends', {
+    $.ajax('http://paulochatapp.azurewebsites.net/classes/friends', {
       type: 'GET',
       data: {username: $('#currentUserName').text()},
       dataType: 'json',
@@ -109,7 +109,7 @@ $(document).on('ready', function () {
 
       var JSONobj = JSON.stringify(obj);
 
-      $.ajax('http://127.0.0.1:80/classes/friends', {
+      $.ajax('http://paulochatapp.azurewebsites.net/classes/friends', {
         type: 'POST',
         data: JSONobj,
         dataType: 'json',
@@ -154,7 +154,7 @@ $(document).on('ready', function () {
 
     var JSONobj = JSON.stringify(obj);
 
-    $.ajax('http://127.0.0.1:80/classes/messages', {
+    $.ajax('http://paulochatapp.azurewebsites.net/classes/messages', {
       type: 'POST',
       data: JSONobj,
       dataType: 'json',
