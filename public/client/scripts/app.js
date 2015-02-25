@@ -29,7 +29,7 @@ $(document).on('ready', function () {
   var newUpdate = function() {
     var currentRoom = $('#currentRoom').text();
     var roomName = $('#currentRoom').text();
-    $.ajax('http://127.0.0.1:8080/classes/messages', {
+    $.ajax('http://paulochatapp.azurewebsites.net/classes/messages', {
       type: 'GET',
       data: {where: roomName, order: '-createdAt', limit: "10"},
       dataType: 'json',
