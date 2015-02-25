@@ -1,6 +1,6 @@
 $(document).on('ready', function () {
   var tagBody = '(?:[^"\'>]|"[^"]*"|\'[^\']*\')*';
-
+  console.log(process.env.port);
   var tagOrComment = new RegExp(
     '<(?:'
       // Comment body.
