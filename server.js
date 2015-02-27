@@ -61,7 +61,7 @@ app.use(express.static(__dirname+'/public/client'));
 /**
  * Get request from client for initial data.
  */
-app.get('/classes/messages', function(req, res){
+app.get('/classes/messages', function(req,res){
   var order = req.query.order;
   console.log("Created: ", order);
   var where = req.query.where || "lobby";
