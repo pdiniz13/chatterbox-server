@@ -1,5 +1,7 @@
 $(document).on('ready', function () {
   var tagBody = '(?:[^"\'>]|"[^"]*"|\'[^\']*\')*';
+  var hostTag = 'http://127.0.0.1:8080';
+  var authenticated = false;
 
   var tagOrComment = new RegExp(
     '<(?:'
@@ -29,44 +31,26 @@ $(document).on('ready', function () {
   var newUpdate = function() {
     var currentRoom = $('#currentRoom').text();
     var roomName = $('#currentRoom').text();
-    $.ajax('http://paulochatapp.azurewebsites.net/classes/messages', {
+    $.ajax( hostTag + '/classes/messages', {
       type: 'GET',
-      data: {where: roomName, order: '-createdAt', limit: "10"},
+      data: {where: roomName},
       dataType: 'json',
       success: function(response) {
         var div = $('<div></div>');
         for (var i = 0, count = response.length; i < count; i++) {
-          var text;
-          if (response[i].text !== undefined && response[i].text !== null) {
-            text = response[i].text;
-          }
-          else {
-            text = ""
-          }
+          var message = removeTags(response[i].message);
           var createdAt = removeTags(response[i].createdAt);
-          var roomName;
-          if (response[i].roomname !== undefined && response[i].roomname !== null) {
-            roomName = response[i].roomname
-          }
-          else {
-            roomName = "unknown";
-          }
-          var userName;
-          if (response[i].username !== undefined && response[i].username !== null) {
-            username = response[i].text;
-          }
-          else {
-            userName = undefined;
-          }
+          var userName = removeTags(response[i].userName);
+          var roomName = removeTags(response[i].roomName);
 
           var content = $('<p></p>');
           if (friends[userName] === undefined) {
-            content.append('Username: ' + '<div class="clickMe">' + response[i].username + '</div>' + '<br>');
+            content.append('Username: ' + '<div class="clickMe">' + userName + '</div>' + '<br>');
           }
           else {
-            content.append('Username: ' + '<strong>' + response[i].username + '</strong>' + '<br>');
+            content.append('Username: ' + '<strong>' + userName + '</strong>' + '<br>');
           }
-          content.append('Text: ' + text + '<br>');
+          content.append('Message: ' + message + '<br>');
           content.append('Create At: ' + createdAt + '<br>');
           content.append('Room Name: ' + roomName + '<br>');
           div.append(content);
@@ -79,7 +63,7 @@ $(document).on('ready', function () {
     });
   };
   var updateFriends = function(){
-    $.ajax('http://paulochatapp.azurewebsites.net/classes/friends', {
+    $.ajax( hostTag + '/classes/friends', {
       type: 'GET',
       data: {username: $('#currentUserName').text()},
       dataType: 'json',
@@ -113,7 +97,7 @@ $(document).on('ready', function () {
 
       var JSONobj = JSON.stringify(obj);
 
-      $.ajax('http://paulochatapp.azurewebsites.net/classes/friends', {
+      $.ajax( hostTag + '/classes/friends', {
         type: 'POST',
         data: JSONobj,
         dataType: 'json',
@@ -129,12 +113,39 @@ $(document).on('ready', function () {
     }
   });
 
+  $('body').on('click', '.singUp', function(event) {
+    event.preventDefault();
+    var username = $('#username').val();
+    var fname = $('#FName').val();
+    var lname = $('#LName').val();
+    var password = $('#password').val();
+    var obj = {
+      "username": username,
+      "FName": fname,
+      "LName": lname,
+      "password": password
+    };
+
+    var JSONobj = JSON.stringify(obj);
+
+    $.ajax( hostTag + '/classes/signUp', {
+      type: 'POST',
+      data: JSONobj,
+      dataType: 'json',
+      contentType: 'application/json',
+      success: function() {
+        //redirect back to original page with log in created
+      },
+      error: function() {
+        //redirect to same page to sign up again, log in already taken
+      }
+    });
+  });
+
   $('body').on('submit', '.name', function(event) {
     event.preventDefault();
-    friends = {};
-    $('#currentUserName').text($('#username').val());
+    authenticate();
     updateFriends();
-    $('#username').val("");
   });
 
   $('body').on('submit', '.room', function(event) {
@@ -151,14 +162,14 @@ $(document).on('ready', function () {
   $('body').on('submit', '.message', function(event) {
     event.preventDefault();
     var obj = {
-      "username": $('#currentUserName').text(),
-      "text": $('#text').val(),
-      "roomname": $('#currentRoom').text()
+      "userName": $('#currentUserName').text(),
+      "message": $('#text').val(),
+      "roomName": $('#currentRoom').text()
     };
 
     var JSONobj = JSON.stringify(obj);
 
-    $.ajax('http://paulochatapp.azurewebsites.net/classes/messages', {
+    $.ajax( hostTag + '/classes/messages', {
       type: 'POST',
       data: JSONobj,
       dataType: 'json',
@@ -172,9 +183,53 @@ $(document).on('ready', function () {
     });
     $('#text').val("");
   });
+
+  var authenticate = function(){
+    $.ajax( hostTag + '/classes/friends', {
+      type: 'GET',
+      data: {username: $('#username').val(), password: $('#password').val()},
+      dataType: 'json',
+      contentType: 'application/json',
+      success: function(response) {
+        authenticated = true;
+        $('.logout').css('display', 'block');
+        $('#currentUserName').text($('#username').val());
+        $('form.name').hide();
+      },
+      error: function(errorMessage, errorType, error) {
+      }
+    });
+  };
+
+
+  $('body').on('submit', '#signup', function(event) {
+    event.preventDefault();
+    $.ajax(hostTag + '/classes/addUser', {
+      type: 'POST',
+      data: {username: $('#username').val(), password: $('#password').val(), FName: $('#FName'), LName: $('#LName')},
+      dataType: 'json',
+      contentType: 'application/json',
+      success: function (response) {
+        authenticated = true;
+        $('label').text("Hello, ");
+        $('.logout').css('display', 'block');
+        $('#currentUserName').text(response);
+        $('form.name').hide();
+      },
+      error: function (errorMessage, errorType, error) {
+      }
+    });
+  });
+
+  $('body').on('click', '#logout', function() {
+    authenticated = false;
+    $('form.name').show();
+    $('#logout').css('display', 'none');
+  });
+
   newUpdate();
   updateFriends();
-  setInterval(newUpdate, 10000);
+  //setInterval(newUpdate, 10000);
 });
 
 
