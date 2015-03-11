@@ -14,12 +14,20 @@
   },
   "dependencies": {
     "JSON": "^1.0.0",
-    "body-parser": "^1.12.0",
+    "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^2.9.13",
+    "body-parser": "^1.5.2",
+    "ejs": "^2.3.1",
     "express": "^4.12.0",
+    "express-partials": "^0.2.0",
+    "express-session": "^1.10.3",
     "json": "^9.0.3",
     "mysql": "^2.5.5",
     "redis": "^0.12.1",
+    "request": "^2.34.0",
     "sequelize": "^2.0.3",
+    "session": "^0.1.0",
+    "session-middleware": "^1.0.2",
     "sqlite3": "^3.0.5",
     "underscore": "^1.8.2"
   }

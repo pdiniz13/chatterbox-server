@@ -1,8 +1,6 @@
 $(document).on('ready', function () {
   var tagBody = '(?:[^"\'>]|"[^"]*"|\'[^\']*\')*';
   var hostTag = 'http://127.0.0.1:8080';
-  var authenticated = false;
-
   var tagOrComment = new RegExp(
     '<(?:'
       // Comment body.

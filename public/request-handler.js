@@ -21,27 +21,6 @@ var dataArr = {results: [{username:'Rioa', text: 'hello', roomname: 'lobby', cre
 //var client = redis.createClient();
 
 exports.requestHandler = function(request, response) {
-  // Request and Response come from node's http module.
-  //
-  // They include information about both the incoming request, such as
-  // headers and URL, and about the outgoing response, such as its status
-  // and content.
-  //
-  // Documentation for both request and response can be found in the HTTP section at
-  // http://nodejs.org/documentation/api/
-
-  // Do some basic logging.
-  //
-  // Adding more logging to your public can be an easy way to get passive
-  // debugging help, but you should always be careful about leaving stray
-  // console.logs in your code.
-  //message object
-  //name
-  //text
-  //createdAt
-  //room
-
-
   //console.log("Serving request type " + request.method + " for url " + request.url);
   //console.log("Request data " + request.text);
   //console.log("Request room " + request.room);
@@ -111,7 +90,7 @@ exports.requestHandler = function(request, response) {
 // This code allows this public to talk to websites that
 // are on different domains, for instance, your chat client.
 //
-// Your chat client is running from a url like file://your/chat/client/index.html,
+// Your chat client is running from a url like file://your/chat/client/index.ejs,
 // which is considered a different domain.
 //
 // Another way to get around this restriction is to serve you chat
